@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professor Pip — English Teacher</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8EE;
+    --yellow: #FFD94A;
+    --orange: #FF8C42;
+    --teal: #2EC4B6;
+    --teal-dark: #1A9E94;
+    --navy: #1B2A4A;
+    --pink: #FF6B9D;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: radial-gradient(circle, #FFD94A33 1.5px, transparent 1.5px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star { position: fixed; font-size: 20px; opacity: 0.18; pointer-events: none; animation: float 6s ease-in-out infinite; }
+  .star:nth-child(1) { top: 8%; left: 5%; animation-delay: 0s; }
+  .star:nth-child(2) { top: 15%; right: 8%; animation-delay: 1.5s; font-size: 14px; }
+  .star:nth-child(3) { top: 60%; left: 3%; animation-delay: 3s; font-size: 12px; }
+  .star:nth-child(4) { bottom: 20%; right: 5%; animation-delay: 2s; font-size: 18px; }
+  .star:nth-child(5) { bottom: 10%; left: 10%; animation-delay: 4s; font-size: 10px; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(10deg); }
+  }
+
+  .header {
+    width: 100%; max-width: 680px;
+    display: flex; align-items: center; gap: 12px;
+    padding: 18px 20px 10px;
+    position: relative; z-index: 10;
+  }
+
+  .brand { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--navy); letter-spacing: 0.5px; }
+  .brand span { color: var(--orange); }
+
+  .level-badge {
+    margin-left: auto;
+    background: var(--navy); color: var(--yellow);
+    font-size: 12px; font-weight: 800;
+    padding: 4px 12px; border-radius: 999px;
+    letter-spacing: 0.5px; display: none;
+  }
+
+  .app {
+    width: 100%; max-width: 680px;
+    display: flex; flex-direction: column;
+    height: calc(100vh - 70px);
+    position: relative; z-index: 10;
+    padding: 0 16px 16px;
+  }
+
+  .teacher-area {
+    display: flex; align-items: flex-end;
+    gap: 14px; margin-bottom: 8px; flex-shrink: 0;
+  }
+
+  .avatar-wrap { position: relative; flex-shrink: 0; }
+
+  .avatar-svg {
+    width: 90px; height: 90px;
+    filter: drop-shadow(0 4px 12px rgba(27,42,74,0.15));
+  }
+
+  .mouth-open { display: none; }
+  .avatar-wrap.talking .mouth-closed { display: none; }
+  .avatar-wrap.talking .mouth-open { display: block; }
+  .avatar-wrap.talking .avatar-svg { animation: bounce 0.4s ease-in-out infinite alternate; }
+
+  @keyframes bounce {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-4px); }
+  }
+
+  .teacher-name-tag {
+    position: absolute; bottom: -8px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--navy); color: var(--yellow);
+    font-size: 9px; font-weight: 800;
+    padding: 2px 8px; border-radius: 999px;
+    white-space: nowrap; letter-spacing: 0.5px;
+  }
+
+  .teacher-speech-bubble {
+    background: white;
+    border-radius: 18px 18px 18px 4px;
+    padding: 14px 18px;
+    font-size: 15px; line-height: 1.55;
+    color: var(--navy); font-weight: 600;
+    box-shadow: 0 4px 20px rgba(27,42,74,0.10);
+    border: 2px solid #F0EDE8;
+    max-width: 480px; min-height: 50px;
+  }
+
+  .typing-dots { display: none; gap: 4px; align-items: center; height: 20px; }
+  .typing-dots span {
+    width: 7px; height: 7px; background: var(--teal);
+    border-radius: 50%; animation: dot-bounce 1.2s ease-in-out infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dot-bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  .teacher-speech-bubble.loading .speech-text { display: none; }
+  .teacher-speech-bubble.loading .typing-dots { display: flex; }
+
+  .chat-history {
+    flex: 1; overflow-y: auto;
+    display: flex; flex-direction: column;
+    gap: 10px; padding: 8px 0;
+    scroll-behavior: smooth;
+  }
+  .chat-history::-webkit-scrollbar { width: 4px; }
+  .chat-history::-webkit-scrollbar-thumb { background: #D0C8BE; border-radius: 4px; }
+
+  .chat-msg { display: flex; animation: slideUp 0.25s ease-out; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chat-msg.user { justify-content: flex-end; }
+  .chat-msg.teacher { justify-content: flex-start; }
+
+  .chat-bubble {
+    max-width: 72%; padding: 10px 15px;
+    border-radius: 18px; font-size: 14px;
+    line-height: 1.5; font-weight: 600;
+  }
+  .chat-msg.user .chat-bubble { background: var(--teal); color: white; border-bottom-right-radius: 4px; }
+  .chat-msg.teacher .chat-bubble {
+    background: white; color: var(--navy);
+    border-bottom-left-radius: 4px;
+    border: 1.5px solid #F0EDE8;
+    box-shadow: 0 2px 8px rgba(27,42,74,0.07);
+  }
+
+  .options-area { flex-shrink: 0; padding-top: 10px; }
+
+  .options-label {
+    font-size: 11px; font-weight: 800;
+    color: #4A5B7A; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 8px;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .options-label.visible { opacity: 1; }
+
+  .options-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .opt-btn {
+    background: white; border: 2px solid #E8E3DC;
+    border-radius: 999px; padding: 9px 18px;
+    font-size: 14px; font-weight: 700; color: var(--navy);
+    cursor: pointer; font-family: 'Nunito', sans-serif;
+    transition: all 0.15s ease;
+    animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards;
+    box-shadow: 0 2px 8px rgba(27,42,74,0.08);
+  }
+  .opt-btn:hover {
+    background: var(--navy); color: var(--yellow);
+    border-color: var(--navy); transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(27,42,74,0.2);
+  }
+  .opt-btn:active { transform: scale(0.96); }
+  .opt-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.7); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .input-area { display: flex; gap: 8px; padding-top: 10px; flex-shrink: 0; }
+
+  .text-input {
+    flex: 1; background: white; border: 2px solid #E8E3DC;
+    border-radius: 999px; padding: 10px 18px;
+    font-size: 14px; font-family: 'Nunito', sans-serif;
+    font-weight: 600; color: var(--navy); outline: none;
+    transition: border-color 0.15s;
+  }
+  .text-input:focus { border-color: var(--teal); }
+  .text-input::placeholder { color: #B0A898; font-weight: 600; }
+  .text-input:disabled { opacity: 0.5; }
+
+  .send-btn {
+    width: 44px; height: 44px; background: var(--teal);
+    border: none; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, transform 0.1s; flex-shrink: 0;
+  }
+  .send-btn:hover { background: var(--teal-dark); transform: scale(1.05); }
+  .send-btn:active { transform: scale(0.95); }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .send-btn svg { width: 18px; height: 18px; fill: white; }
+</style>
+</head>
+<body>
+
+<div class="star">★</div>
+<div class="star">✦</div>
+<div class="star">★</div>
+<div class="star">✦</div>
+<div class="star">★</div>
+
+<div class="header">
+  <div class="brand">Prof<span>.</span>Pip</div>
+  <div class="level-badge" id="level-badge">Level —</div>
+</div>
+
+<div class="app">
+
+  <div class="teacher-area">
+    <div class="avatar-wrap" id="avatar-wrap">
+      <svg class="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="50" cy="72" rx="28" ry="22" fill="#2EC4B6"/>
+        <ellipse cx="50" cy="78" rx="22" ry="16" fill="#1A9E94"/>
+        <circle cx="50" cy="44" r="28" fill="#FFD94A"/>
+        <polygon points="26,22 20,8 34,18" fill="#FFD94A"/>
+        <polygon points="74,22 80,8 66,18" fill="#FFD94A"/>
+        <polygon points="27,20 22,10 32,17" fill="#FF8C42" opacity="0.5"/>
+        <polygon points="73,20 78,10 68,17" fill="#FF8C42" opacity="0.5"/>
+        <circle cx="38" cy="44" r="11" fill="white" stroke="#1B2A4A" stroke-width="2.5"/>
+        <circle cx="62" cy="44" r="11" fill="white" stroke="#1B2A4A" stroke-width="2.5"/>
+        <line x1="49" y1="44" x2="51" y2="44" stroke="#1B2A4A" stroke-width="2.5"/>
+        <line x1="27" y1="42" x2="22" y2="40" stroke="#1B2A4A" stroke-width="2.5"/>
+        <line x1="73" y1="42" x2="78" y2="40" stroke="#1B2A4A" stroke-width="2.5"/>
+        <circle cx="38" cy="43" r="5.5" fill="#1B2A4A"/>
+        <circle cx="62" cy="43" r="5.5" fill="#1B2A4A"/>
+        <circle cx="39.5" cy="41.5" r="1.8" fill="white"/>
+        <circle cx="63.5" cy="41.5" r="1.8" fill="white"/>
+        <polygon points="50,52 45,58 55,58" fill="#FF8C42"/>
+        <path class="mouth-closed" d="M 45 61 Q 50 63 55 61" stroke="#1B2A4A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse class="mouth-open" cx="50" cy="62" rx="5" ry="3" fill="#1B2A4A"/>
+        <polygon points="38,65 50,70 38,75" fill="#FF6B9D"/>
+        <polygon points="62,65 50,70 62,75" fill="#FF6B9D"/>
+        <circle cx="50" cy="70" r="3" fill="#FF6B9D"/>
+        <rect x="30" y="16" width="40" height="5" rx="2" fill="#1B2A4A"/>
+        <polygon points="50,6 30,16 70,16" fill="#1B2A4A"/>
+        <line x1="68" y1="16" x2="72" y2="24" stroke="#FFD94A" stroke-width="2"/>
+        <circle cx="72" cy="25" r="3" fill="#FFD94A"/>
+        <ellipse cx="22" cy="72" rx="10" ry="14" fill="#2EC4B6" transform="rotate(-15 22 72)"/>
+        <ellipse cx="78" cy="72" rx="10" ry="14" fill="#2EC4B6" transform="rotate(15 78 72)"/>
+      </svg>
+      <div class="teacher-name-tag">Prof. Pip</div>
+    </div>
+
+    <div class="teacher-speech-bubble" id="speech-bubble">
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+      <div class="speech-text" id="speech-text"></div>
+    </div>
+  </div>
+
+  <div class="chat-history" id="chat-history"></div>
+
+  <div class="options-area">
+    <div class="options-label" id="options-label">Choose a reply</div>
+    <div class="options-wrap" id="options-wrap"></div>
+  </div>
+
+  <div class="input-area">
+    <input class="text-input" id="text-input" type="text" placeholder="Type your message…" />
+    <button class="send-btn" id="send-btn" onclick="sendFromInput()">
+      <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  const WEBHOOK = 'https://n8n.srv1045037.hstgr.cloud/webhook/2f043674-bbf1-47b1-b6c3-157454d35813';
+
+  const INTRO = "Hi there! I'm Professor Pip, your personal English teacher. I'll start by getting to know you a little, then give you a short quiz to find your level — and we'll build from there. Ready? Say hello and tell me your name!";
+  const INTRO_OPTIONS = ["Hi! My name is…", "Let's start!", "How does this work?"];
+
+  let isLoading = false;
+  let speechTimeout = null;
+
+  const avatarWrap = document.getElementById('avatar-wrap');
+  const speechBubble = document.getElementById('speech-bubble');
+  const speechText = document.getElementById('speech-text');
+  const chatHistory = document.getElementById('chat-history');
+  const optionsWrap = document.getElementById('options-wrap');
+  const optionsLabel = document.getElementById('options-label');
+  const textInput = document.getElementById('text-input');
+  const sendBtn = document.getElementById('send-btn');
+
+  function setControls(enabled) {
+    textInput.disabled = !enabled;
+    sendBtn.disabled = !enabled;
+    document.querySelectorAll('.opt-btn').forEach(b => b.disabled = !enabled);
+  }
+
+  function pipSpeak(text) {
+    speechText.textContent = text;
+    speechBubble.classList.remove('loading');
+    avatarWrap.classList.add('talking');
+    if (speechTimeout) clearTimeout(speechTimeout);
+    const dur = Math.min(Math.max(text.length * 38, 1000), 4500);
+    speechTimeout = setTimeout(() => avatarWrap.classList.remove('talking'), dur);
+  }
+
+  function pipThink() {
+    speechBubble.classList.add('loading');
+    speechText.textContent = '';
+    avatarWrap.classList.remove('talking');
+  }
+
+  function addMsg(text, role) {
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-msg ' + role;
+    const bub = document.createElement('div');
+    bub.className = 'chat-bubble';
+    bub.textContent = text;
+    wrap.appendChild(bub);
+    chatHistory.appendChild(wrap);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+  }
+
+  function showOptions(options) {
+    optionsWrap.innerHTML = '';
+    if (!options || options.length === 0) { optionsLabel.classList.remove('visible'); return; }
+    optionsLabel.classList.add('visible');
+    options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = opt;
+      btn.style.animationDelay = (i * 0.07) + 's';
+      btn.onclick = () => sendMessage(opt);
+      optionsWrap.appendChild(btn);
+    });
+  }
+
+  function updateLevel(score) {
+    if (!score || !score.final_level) return;
+    const badge = document.getElementById('level-badge');
+    badge.textContent = 'Level ' + score.final_level;
+    badge.style.display = 'block';
+  }
+
+  async function sendMessage(text) {
+    if (isLoading || !text.trim()) return;
+    isLoading = true;
+    textInput.value = '';
+    optionsWrap.innerHTML = '';
+    optionsLabel.classList.remove('visible');
+    setControls(false);
+
+    addMsg(text, 'user');
+    pipThink();
+
+    try {
+      const res = await fetch(WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chatInput: text, message: text })
+      });
+
+      const raw = await res.text();
+      let reply = '';
+      let options = [];
+      let score = null;
+
+      try {
+        const clean = raw.replace(/```json|```/g, '').trim();
+        const parsed = JSON.parse(clean);
+        reply = parsed.reply || parsed.message || parsed.output || raw;
+        options = Array.isArray(parsed.options) ? parsed.options : [];
+        score = parsed.score || null;
+      } catch {
+        reply = raw;
+      }
+
+      if (reply) {
+        addMsg(reply, 'teacher');
+        pipSpeak(reply);
+        showOptions(options);
+        if (score) updateLevel(score);
+      }
+
+    } catch {
+      const err = "Oops! I couldn't reach the server. Please check your connection and try again.";
+      addMsg(err, 'teacher');
+      pipSpeak(err);
+    }
+
+    isLoading = false;
+    setControls(true);
+    textInput.focus();
+  }
+
+  function sendFromInput() {
+    const val = textInput.value.trim();
+    if (val) sendMessage(val);
+  }
+
+  textInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendFromInput(); });
+
+  // Show intro on load — no webhook call, user sends first
+  window.addEventListener('load', () => {
+    pipSpeak(INTRO);
+    showOptions(INTRO_OPTIONS);
+  });
+</script>
+</body>
+</html>
