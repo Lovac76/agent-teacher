@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professor Pip — English Teacher</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="star">★</div>
+<div class="star">✦</div>
+<div class="star">★</div>
+<div class="star">✦</div>
+<div class="star">★</div>
+
+<div class="header">
+  <div class="brand">Prof<span>.</span>Pip</div>
+  <div class="level-badge" id="level-badge">Level —</div>
+</div>
+
+<div class="app">
+
+  <div class="teacher-area">
+    <div class="avatar-wrap" id="avatar-wrap">
+      <svg class="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="50" cy="72" rx="28" ry="22" fill="#2EC4B6"/>
+        <ellipse cx="50" cy="78" rx="22" ry="16" fill="#1A9E94"/>
+        <circle cx="50" cy="44" r="28" fill="#FFD94A"/>
+        <polygon points="26,22 20,8 34,18" fill="#FFD94A"/>
+        <polygon points="74,22 80,8 66,18" fill="#FFD94A"/>
+        <polygon points="27,20 22,10 32,17" fill="#FF8C42" opacity="0.5"/>
+        <polygon points="73,20 78,10 68,17" fill="#FF8C42" opacity="0.5"/>
+        <circle cx="38" cy="44" r="11" fill="white" stroke="#1B2A4A" stroke-width="2.5"/>
+        <circle cx="62" cy="44" r="11" fill="white" stroke="#1B2A4A" stroke-width="2.5"/>
+        <line x1="49" y1="44" x2="51" y2="44" stroke="#1B2A4A" stroke-width="2.5"/>
+        <line x1="27" y1="42" x2="22" y2="40" stroke="#1B2A4A" stroke-width="2.5"/>
+        <line x1="73" y1="42" x2="78" y2="40" stroke="#1B2A4A" stroke-width="2.5"/>
+        <circle cx="38" cy="43" r="5.5" fill="#1B2A4A"/>
+        <circle cx="62" cy="43" r="5.5" fill="#1B2A4A"/>
+        <circle cx="39.5" cy="41.5" r="1.8" fill="white"/>
+        <circle cx="63.5" cy="41.5" r="1.8" fill="white"/>
+        <polygon points="50,52 45,58 55,58" fill="#FF8C42"/>
+        <path class="mouth-closed" d="M 45 61 Q 50 63 55 61" stroke="#1B2A4A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <ellipse class="mouth-open" cx="50" cy="62" rx="5" ry="3" fill="#1B2A4A"/>
+        <polygon points="38,65 50,70 38,75" fill="#FF6B9D"/>
+        <polygon points="62,65 50,70 62,75" fill="#FF6B9D"/>
+        <circle cx="50" cy="70" r="3" fill="#FF6B9D"/>
+        <rect x="30" y="16" width="40" height="5" rx="2" fill="#1B2A4A"/>
+        <polygon points="50,6 30,16 70,16" fill="#1B2A4A"/>
+        <line x1="68" y1="16" x2="72" y2="24" stroke="#FFD94A" stroke-width="2"/>
+        <circle cx="72" cy="25" r="3" fill="#FFD94A"/>
+        <ellipse cx="22" cy="72" rx="10" ry="14" fill="#2EC4B6" transform="rotate(-15 22 72)"/>
+        <ellipse cx="78" cy="72" rx="10" ry="14" fill="#2EC4B6" transform="rotate(15 78 72)"/>
+      </svg>
+      <div class="teacher-name-tag">Prof. Pip</div>
+    </div>
+
+    <div class="teacher-speech-bubble" id="speech-bubble">
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+      <div class="speech-text" id="speech-text"></div>
+    </div>
+  </div>
+
+  <div class="chat-history" id="chat-history"></div>
+
+  <div class="options-area">
+    <div class="options-label" id="options-label">Choose a reply</div>
+    <div class="options-wrap" id="options-wrap"></div>
+  </div>
+
+  <div class="input-area">
+    <input class="text-input" id="text-input" type="text" placeholder="Type your message…" />
+    <button class="send-btn" id="send-btn">
+      <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+    </button>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
